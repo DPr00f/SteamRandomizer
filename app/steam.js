@@ -33,7 +33,7 @@ var getSteamId = function(user, cb){
 				throw error;
 				return;
 			}
-			if(result.profile && result.profile.steamID64 && result.profile.steamID64[0]){
+			if(result && result.profile && result.profile.steamID64 && result.profile.steamID64[0]){
 				cb(null, result.profile.steamID64[0]);
 			}else{
 				cb(new Error('Steam ID couldn\'t be found'));
@@ -43,19 +43,38 @@ var getSteamId = function(user, cb){
 }
 
 
-exports.getUserSteamID = function(app, cb){
-	var user = app.get('steam-user');
-	var steamId = app.get(user + '-id');
+exports.getUserSteamID = function(cb){
+	var user = GLOBAL.app.get('steam-user');
+	var steamId = GLOBAL.app.get(user + '-id');
 	if(!steamId){
 		getSteamId(user, function(error, id){
 			if(error){
 				throw error;
 				return;
 			}
-			app.set(user + '-id', id);
+			GLOBAL.app.set(user + '-id', id);
 			cb(id);
 		});
 	}else{
 		cb(steamId);
 	}
+}
+
+
+exports.getOwnedGames = function(cb){
+	this.getUserSteamID(function(steamID){
+		var url = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=<steam-api-key>&steamid=<steamID>&include_appinfo=1&format=json";
+		url = url.replace(/<steam-api-key>/g, GLOBAL.app.get('steam-api-key'));
+		url = url.replace(/<steamID>/g, steamID);
+
+		getWebsite(url, function(error, response, body){
+			if(error){
+				throw error;
+				return;
+			}
+			data = JSON.parse(body);
+			// TODO: validate
+			cb(data.response.games);
+		});
+	});
 }

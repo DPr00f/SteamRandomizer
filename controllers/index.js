@@ -6,7 +6,7 @@
 var steam = require('../app/steam')
 
 exports.index = function(req, res){
-	// Load user SteamID
-	steam.getUserSteamID(GLOBAL.app);
-  	res.render('index', { title: 'Express' });
+	steam.getOwnedGames(function(games){
+		res.render('index', { title: 'Steam Games', games: games });
+	});
 };
