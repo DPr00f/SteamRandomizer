@@ -1,6 +1,16 @@
 var express = require('express')
 var path = require('path')
+var fs = require('fs');
+var configurationFile = JSON.parse(fs.readFileSync('package.json'));
 
+
+var setSteamAPIKey = function(app){
+	app.set('steam-api-key', configurationFile.steamAPIKey);
+}
+
+var setSteamUserToLoad = function(app){
+	app.set('steam-user', configurationFile.steamUser);
+}
 
 var setDatabaseData = function(app){
 	if('development' == app.get('env')){
@@ -19,6 +29,8 @@ exports.setup = function(app){
 	app.set('views', path.join(__dirname, '../views'));
 	app.set('view engine', 'ejs');
 	setDatabaseData(app);
+	setSteamUserToLoad(app);
+	setSteamAPIKey(app);
 }
 
 

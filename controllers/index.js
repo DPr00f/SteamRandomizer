@@ -3,6 +3,10 @@
  * GET home page.
  */
 
+var steam = require('../app/steam')
+
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+	// Load user SteamID
+	steam.getUserSteamID(GLOBAL.app);
+  	res.render('index', { title: 'Express' });
 };
