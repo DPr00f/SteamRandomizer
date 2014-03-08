@@ -3,6 +3,7 @@ var isNumeric = require("isnumeric");
 var request = require("request");
 var xml2js = require('xml2js');
 
+// Returns error, response, body
 var getWebsite = function(url, cb){
 	request({
 		uri: url
@@ -12,7 +13,8 @@ var getWebsite = function(url, cb){
 }
 
 
-var getSteamId = function(user, cb){
+// Returns error, steamID, isPrivate, avatar
+var getSteamIdAndAvatar = function(user, cb){
 	var url = "http://steamcommunity.com/";
 
 	if(isNumeric(user)){
@@ -21,10 +23,13 @@ var getSteamId = function(user, cb){
 		url += 'id/';
 	}
 	url += user + "?xml=1";
-
 	getWebsite(url, function(error, response, body){
 		if(error){
 			throw error;
+			return;
+		}
+		if(body.match(/503 Service Unavailable/g)){
+			cb(new Error('Service Unavailable'));
 			return;
 		}
 		var xmlParser = new xml2js.Parser();
@@ -34,7 +39,15 @@ var getSteamId = function(user, cb){
 				return;
 			}
 			if(result && result.profile && result.profile.steamID64 && result.profile.steamID64[0]){
-				cb(null, result.profile.steamID64[0]);
+				var isPrivate = false;
+				var avatar;
+				if(result.profile.privacyState && result.profile.privacyState[0] !== "public"){
+					isPrivate = true;
+				}
+				if(result.profile.avatarIcon && result.profile.avatarIcon[0]){
+					avatar = result.profile.avatarIcon[0];
+				}
+				cb(null, result.profile.steamID64[0], isPrivate, avatar);
 			}else{
 				cb(new Error('Steam ID couldn\'t be found'));
 			}
@@ -43,38 +56,50 @@ var getSteamId = function(user, cb){
 }
 
 
-exports.getUserSteamID = function(cb){
-	var user = GLOBAL.app.get('steam-user');
-	var steamId = GLOBAL.app.get(user + '-id');
-	if(!steamId){
-		getSteamId(user, function(error, id){
-			if(error){
+// Returns error, steamID, isPrivate, avatar
+exports.getUserSteamIDAndAvatar = function(user, cb){
+	var user = user || GLOBAL.app.get('steam-user');
+	getSteamIdAndAvatar(user, function(error, id, isPrivate, avatar){
+		var retError;
+		if(error){
+			retError = {};
+			if(error.message === 'Steam ID couldn\'t be found'){
+				retError.wrongSteamID = true;
+			}else if(error.message === 'Service Unavailable'){
+				retError.steamDown = true;
+			}else{
 				throw error;
 				return;
 			}
-			GLOBAL.app.set(user + '-id', id);
-			cb(id);
-		});
-	}else{
-		cb(steamId);
-	}
+		}
+		cb(retError, id, isPrivate, avatar);
+	});
 }
 
 
-exports.getOwnedGames = function(cb){
-	this.getUserSteamID(function(steamID){
+// Returns steamError {wrongSteamID, steamDown, isPrivate}, gamesList
+exports.getOwnedGames = function(user, cb){
+	this.getUserSteamIDAndAvatar(user, function(steamError, steamID, isPrivate, avatar){
 		var url = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=<steam-api-key>&steamid=<steamID>&include_appinfo=1&format=json";
 		url = url.replace(/<steam-api-key>/g, GLOBAL.app.get('steam-api-key'));
 		url = url.replace(/<steamID>/g, steamID);
-
+		if(isPrivate){
+			if(!steamError){
+				steamError = {};
+			}
+			steamError.isPrivate = true;
+		}
+		if(steamError){
+			cb(steamError);
+			return;
+		}
 		getWebsite(url, function(error, response, body){
 			if(error){
 				throw error;
 				return;
 			}
 			data = JSON.parse(body);
-			// TODO: validate
-			cb(data.response.games);
+			cb(false, data.response.games, avatar);
 		});
 	});
 }

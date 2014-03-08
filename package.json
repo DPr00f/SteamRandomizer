@@ -13,8 +13,8 @@
     "node-mysql": "~0.3.7",
     "mysql": "~2.1.0",
     "isnumeric": "0.0.10",
-    "request": "~2.34.0",
-    "xml2js": "~0.4.1"
+    "xml2js": "~0.4.1",
+    "connect": "~2.14.1"
   },
   "devDependencies": {
     "nodemon": "~1.0.15"
