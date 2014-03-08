@@ -4,6 +4,7 @@
  */
 
 var express = require('express');
+
 var config = require('./app/config');
 var http = require('http');
 var path = require('path');
@@ -11,6 +12,7 @@ var fs = require('fs');
 var mysql = require('./app/mysql');
 var configurationFile = JSON.parse(fs.readFileSync('package.json'));
 var urls = require('./app/urlMappings');
+
 var app = express();
 
 config.setup(app);

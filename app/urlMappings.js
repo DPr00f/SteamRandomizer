@@ -1,10 +1,10 @@
 var express = require('express');
-var routes = require('../routes');
-var user = require('../routes/user');
+var controllers = require('../controllers');
+var user = require('../controllers/user');
 
 
 exports.routing = function(app){
 	var connection = express.connection;
-	app.get('/', routes.index);
+	app.get('/', controllers.index);
 	app.get('/users', user.list);
 }
