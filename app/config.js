@@ -20,6 +20,14 @@ var setDatabaseData = function(app){
 			user: 'root',
 			password: ''
 		});
+	}else if('heroku' == app.get('env')){
+		var herokuFile = JSON.parse(fs.readFileSync('heroku.json'));
+		app.set('db', {
+			host: herokuFile.host,
+			database: herokuFile.database,
+			user: herokuFile.user,
+			password: herokuFile.password
+		});
 	}
 }
 

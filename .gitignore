@@ -1,4 +1,5 @@
 lib-cov
+heroku.json
 *.seed
 *.log
 *.csv
@@ -13,4 +14,3 @@ results
 
 npm-debug.log
 node_modules
-package.json
