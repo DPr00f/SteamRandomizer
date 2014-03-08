@@ -8,12 +8,12 @@
   <img src="<%= avatar %>">
   <ul>
   <% for(var i=0; i<games.length; i++) {%>
-    <li>
       <% if(games[i].img_logo_url){ %>
-        <span class="image"><img src="http://media.steampowered.com/steamcommunity/public/images/apps/<%= games[i].appid %>/<%= games[i].img_logo_url %>.jpg" alt=""></span>
-        <span class="name"><%= games[i].name %></span>
+      <li>
+          <span class="image"><img src="http://media.steampowered.com/steamcommunity/public/images/apps/<%= games[i].appid %>/<%= games[i].img_logo_url %>.jpg" alt=""></span>
+          <span class="name"><%= games[i].name %></span>
+      </li>
       <% } %>
-    </li>
   <% } %>
   </ul>
 
