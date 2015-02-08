@@ -1,0 +1,72 @@
+.steam-group-button {
+  outline: none;
+  color: #FFF;
+  font-size: 13px;
+  line-height: 26px;
+  outline: none;
+  text-decoration: none;
+  position: relative;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: top;
+  
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  
+  background-color: #36648b !important;
+}
+ 
+.steam-group-button:focus, .steam-group-button:hover, .steam-group-button:active {
+  color: #FFF;
+  background-color: #203c53 !important;
+  box-shadow: none;
+}
+ 
+.steam-group-label {
+  padding: 0 7px 0 7px;
+}
+.steam-game.hasPlayed {
+  opacity: 0.6;
+}
+
+.steam-game {
+  float: left;
+  border: 1px solid black;
+  margin: 10px;
+  background: #E4EBF5;
+  width: 184px;
+  height: 120px;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 6px 4px rgba(0,0,0,0.5);
+}
+
+.steam-game__name {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.steam-game__total-played {
+  position: absolute;
+  bottom: 0;
+  left: 2px;
+  font-size: 10px;
+  color: #444649;
+}
+
+.single-game {
+  position: relative;
+  width: 100%;
+  height: 0;
+  transition: height 0.2s;
+}
+
+.single-game.is-visible {
+  height: 300px;
+}

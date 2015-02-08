@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <!-- <link rel='stylesheet' href='/stylesheets/style.css' /> -->
-  </head>
-  <body>
-
-  	<form action="/u/" method="post">
-  		<label for="steamid"><h1>Insert your steam profile id</h1></label>
-  		<input style="width: 300px" type="text" name="steamid" id="steamid" placeholder="e.g. “pr00fgames” and tap enter">
-  	</form>
-
-  </body>
-</html>
+<% if(!userLogged) { %>
+<div class="panel">
+  <h3 class="text-center">
+    Your list of games will appear here whenever you sign in through steam.
+  </h3>
+  <h3 class="text-center">
+    We'll pick a random game for you to play, and you can mark the ones you've played already.
+  </h3>
+</div>
+<% } else { %>
+<div class="panel text-center js-games">
+  <h1>Grabbing your list of games</h1>
+  <div class="progress">
+    <span class="meter js-meter"></span>
+  </div>
+</div>
+<% } %>

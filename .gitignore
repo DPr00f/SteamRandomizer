@@ -1,5 +1,4 @@
 lib-cov
-heroku.json
 *.seed
 *.log
 *.csv

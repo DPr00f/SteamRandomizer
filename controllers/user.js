@@ -1,4 +1,5 @@
-var steam = require('../app/steam');
+var steam = require('../app/steam'),
+		steamApi = require('steam-api');
 
 exports.postSteamID = function(req, res){
 	var steamid = req.body.steamid;
@@ -22,3 +23,14 @@ exports.getGames = function(req, res){
 		res.render('listgames', { title: 'Steam Games of ' + req.params.steamID, steamID: req.params.steamID, games: games, avatar: largeAvatar});
 	});
 };
+
+exports.account = function(req, res){
+	res.render('account', { user: req.user });
+};
+
+exports.games = function(req, res) {
+	var player = new steamApi.Player();
+	player.GetOwnedGames(req.session.passport.user.id).done(function(result){
+		res.json(result);
+	});
+}

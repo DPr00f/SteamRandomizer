@@ -22,7 +22,7 @@ var getSteamIdAndAvatar = function(user, cb){
 	}else{
 		url += 'id/';
 	}
-	url += user + "?xml=1";
+	url += user + "?json=1";
 	getWebsite(url, function(error, response, body){
 		if(error){
 			throw error;
