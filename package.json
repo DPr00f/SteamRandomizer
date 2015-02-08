@@ -19,6 +19,7 @@
     "mysql": "^2.5.4",
     "passport": "^0.2.1",
     "passport-steam": "^0.1.4",
+    "request": "^2.53.0",
     "restler": "^3.2.2",
     "serve-static": "^1.8.1",
     "steam-api": "^1.0.2",
