@@ -1,3 +1,5 @@
+'use strict';
+
 var steam = require('../app/steam'),
 		steamApi = require('steam-api');
 

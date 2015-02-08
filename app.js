@@ -1,4 +1,4 @@
-
+'use strict';
 /**
  * Module dependencies.
  */
@@ -7,7 +7,6 @@ var express = require('express');
 
 var config = require('./app/config');
 var http = require('http');
-var path = require('path');
 var mysql = require('./app/mysql');
 
 var app = express();

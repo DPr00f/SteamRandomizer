@@ -1,7 +1,7 @@
+'use strict';
+
 var express = require('express'),
     path = require('path'),
-    fs = require('fs'),
-    contentDisposition = require('content-disposition'),
     serveStatic = require('serve-static'),
     bodyParser = require('body-parser'),
     multipart = require('connect-multiparty'),
@@ -12,7 +12,7 @@ var express = require('express'),
     SteamStrategy = require('passport-steam').Strategy,
     partials = require('express-partials'),
     steamApi = require('steam-api'),
-	redirectHost = process.env.REDIRECT_REALM || "http://localhost:3000/";
+	redirectHost = process.env.REDIRECT_REALM || 'http://localhost:3000/';
 
 
 passport.serializeUser(function(user, done) {
@@ -44,27 +44,11 @@ function setSteamUserToLoad(app){
   app.set('steam-user', 'pr00fgames');
 }
 
-function setHeaders(res, path) {
-  res.setHeader('Content-Disposition', contentDisposition(path));
-}
-
-function setDatabaseData(app){
-  if('development' == app.get('env')){
-    app.set('db', {
-      host: 'localhost',
-      database: 'steamrand',
-      user: 'root',
-      password: ''
-    });
-  }
-}
-
 exports.setup = function(app){
   // all environments
   app.set('port', process.env.PORT || 3000);
   app.set('views', path.join(__dirname, '../views'));
   app.set('view engine', 'ejs');
-  setDatabaseData(app);
   setSteamUserToLoad(app);
   setSteamAPIKey(app);
 };

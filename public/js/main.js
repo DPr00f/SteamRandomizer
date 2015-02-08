@@ -1,5 +1,8 @@
 (function(undefined){
-  "use strict";
+  'use strict';
+  // INIT Foundation
+  $(document).foundation();
+  
   var gamesList,
     $gamesList,
     $jsGames = $('.js-games'),
@@ -11,7 +14,7 @@
     $jsMeter.css({ 'width': 0 });
     $.ajax({
       type: 'GET',
-      url: "/games",
+      url: '/games',
       dataType: 'json',
       xhrFields: {
         onprogress: function onProgress(e) {
@@ -69,5 +72,5 @@
       renderSingleGame.call(this);
     });
 
-  };
+  }
 })();

@@ -1,6 +1,7 @@
-var express = require('express');
-var isNumeric = require("isnumeric");
-var request = require("request");
+'use strict';
+
+var isNumeric = require('isnumeric');
+var request = require('request');
 var xml2js = require('xml2js');
 
 // Returns error, response, body
@@ -15,18 +16,17 @@ var getWebsite = function getWebsite(url, cb){
 
 // Returns error, steamID, isPrivate, avatar
 var getSteamIdAndAvatar = function getSteamIdAndAvatar(user, cb){
-	var url = "http://steamcommunity.com/";
+	var url = 'http://steamcommunity.com/';
 
 	if(isNumeric(user)){
 		url += 'profiles/';
 	}else{
 		url += 'id/';
 	}
-	url += user + "?json=1";
+	url += user + '?json=1';
 	getWebsite(url, function(error, response, body){
 		if(error){
 			throw error;
-			return;
 		}
 		if(body.match(/503 Service Unavailable/g)){
 			cb(new Error('Service Unavailable'));
@@ -36,12 +36,11 @@ var getSteamIdAndAvatar = function getSteamIdAndAvatar(user, cb){
 		xmlParser.parseString(body, function (error, result) {
 			if(error){
 				throw error;
-				return;
 			}
 			if(result && result.profile && result.profile.steamID64 && result.profile.steamID64[0]){
 				var isPrivate = false;
 				var avatar;
-				if(result.profile.privacyState && result.profile.privacyState[0] !== "public"){
+				if(result.profile.privacyState && result.profile.privacyState[0] !== 'public'){
 					isPrivate = true;
 				}
 				if(result.profile.avatarIcon && result.profile.avatarIcon[0]){
@@ -69,7 +68,6 @@ exports.getUserSteamIDAndAvatar = function getUserSteamIDAndAvatar(user, cb){
 				retError.steamDown = true;
 			}else{
 				throw error;
-				return;
 			}
 		}
 		cb(retError, id, isPrivate, avatar);

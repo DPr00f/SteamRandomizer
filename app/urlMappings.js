@@ -1,5 +1,6 @@
-var express = require('express'),
-    controllers = require('../controllers'),
+'use strict';
+
+var controllers = require('../controllers'),
     user = require('../controllers/user');
 
 function ensureAuthenticated(req, res, next) {
@@ -8,7 +9,6 @@ function ensureAuthenticated(req, res, next) {
 }
 
 exports.routing = function routing(){
-  var connection = express.connection;
   var app = GLOBAL.app;
   app.get('/', controllers.index);
   app.post('/u', user.postSteamID);
