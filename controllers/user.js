@@ -1,12 +1,12 @@
 var steam = require('../app/steam'),
 		steamApi = require('steam-api');
 
-exports.postSteamID = function(req, res){
+exports.postSteamID = function postSteamID(req, res){
 	var steamid = req.body.steamid;
 	res.redirect('/u/' + steamid);
 };
 
-exports.getGames = function(req, res){
+exports.getGames = function getGames(req, res){
 	steam.getOwnedGames(req.params.steamID, function(steamError, games, avatar){
 		//SteamError {wrongSteamID, steamDown, isPrivate}
 		if(steamError){
@@ -24,13 +24,13 @@ exports.getGames = function(req, res){
 	});
 };
 
-exports.account = function(req, res){
+exports.account = function account(req, res){
 	res.render('account', { user: req.user });
 };
 
-exports.games = function(req, res) {
+exports.games = function games(req, res) {
 	var player = new steamApi.Player();
 	player.GetOwnedGames(req.session.passport.user.id).done(function(result){
 		res.json(result);
 	});
-}
+};

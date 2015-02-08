@@ -4,17 +4,17 @@ var request = require("request");
 var xml2js = require('xml2js');
 
 // Returns error, response, body
-var getWebsite = function(url, cb){
+var getWebsite = function getWebsite(url, cb){
 	request({
 		uri: url
 	}, function(error, response, body) {
 		cb(error, response, body);
 	});
-}
+};
 
 
 // Returns error, steamID, isPrivate, avatar
-var getSteamIdAndAvatar = function(user, cb){
+var getSteamIdAndAvatar = function getSteamIdAndAvatar(user, cb){
 	var url = "http://steamcommunity.com/";
 
 	if(isNumeric(user)){
@@ -53,12 +53,12 @@ var getSteamIdAndAvatar = function(user, cb){
 			}
 		});
 	});
-}
+};
 
 
 // Returns error, steamID, isPrivate, avatar
-exports.getUserSteamIDAndAvatar = function(user, cb){
-	var user = user || GLOBAL.app.get('steam-user');
+exports.getUserSteamIDAndAvatar = function getUserSteamIDAndAvatar(user, cb){
+	user = user || GLOBAL.app.get('steam-user');
 	getSteamIdAndAvatar(user, function(error, id, isPrivate, avatar){
 		var retError;
 		if(error){
@@ -74,11 +74,11 @@ exports.getUserSteamIDAndAvatar = function(user, cb){
 		}
 		cb(retError, id, isPrivate, avatar);
 	});
-}
+};
 
 
 // Returns steamError {wrongSteamID, steamDown, isPrivate}, gamesList
-exports.getOwnedGames = function(user, cb){
+exports.getOwnedGames = function getOwnedGames(user, cb){
 	this.getUserSteamIDAndAvatar(user, function(steamError, steamID, isPrivate, avatar){
 		var url = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=<steam-api-key>&steamid=<steamID>&include_appinfo=1&format=json";
 		url = url.replace(/<steam-api-key>/g, GLOBAL.app.get('steam-api-key'));
@@ -102,4 +102,4 @@ exports.getOwnedGames = function(user, cb){
 			cb(false, data.response.games, avatar);
 		});
 	});
-}
+};

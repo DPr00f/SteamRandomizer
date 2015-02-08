@@ -7,11 +7,11 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/');
 }
 
-exports.routing = function(){
+exports.routing = function routing(){
   var connection = express.connection;
   var app = GLOBAL.app;
   app.get('/', controllers.index);
   app.post('/u', user.postSteamID);
   app.get('/u/:steamID', user.getGames);
   app.get('/games', ensureAuthenticated, user.games);
-}
+};
