@@ -10,8 +10,9 @@ var express = require('express'),
     mapping = require('./urlMappings'),
     passport = require('passport'),
     SteamStrategy = require('passport-steam').Strategy,
-    partials = require('express-partials')
-    steamApi = require('steam-api');
+    partials = require('express-partials'),
+    steamApi = require('steam-api'),
+	redirectHost = process.env.REDIRECT_REALM || "http://localhost:3000/";
 
 
 passport.serializeUser(function(user, done) {
@@ -23,8 +24,8 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new SteamStrategy({
-    returnURL: 'http://localhost:3000/auth/steam/return',
-    realm: 'http://localhost:3000/',
+    returnURL: redirectHost + 'auth/steam/return',
+    realm: redirectHost,
     profile: false
   },
   function(identifier, profile, done) {
@@ -44,7 +45,7 @@ function setSteamUserToLoad(app){
 }
 
 function setHeaders(res, path) {
-  res.setHeader('Content-Disposition', contentDisposition(path))
+  res.setHeader('Content-Disposition', contentDisposition(path));
 }
 
 function setDatabaseData(app){
@@ -66,7 +67,7 @@ exports.setup = function(app){
   setDatabaseData(app);
   setSteamUserToLoad(app);
   setSteamAPIKey(app);
-}
+};
 
 function initializeUser(req, res, next) {
    if ( req.isAuthenticated() && !req.session.passport.user.displayName ) {
@@ -84,7 +85,8 @@ function initializeUser(req, res, next) {
    }else{
     next();
    }
-};
+}
+
 exports.middlewares = function(app){
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -112,7 +114,7 @@ exports.middlewares = function(app){
   app.get('/logout', function(req, res){ req.logout(); res.redirect('/'); });
   mapping.routing();
   app.use(serveStatic(path.join(__dirname, '../public')));
-}
+};
 
 
 // development only
@@ -120,4 +122,4 @@ exports.development = function(app){
   if ('development' == app.get('env')) {
     app.use(express.errorHandler());
   }
-}
+};
