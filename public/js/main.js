@@ -4,9 +4,12 @@
   $(document).foundation();
   
   var gamesList,
-    $gamesList,
-    $jsGames = $('.js-games'),
-    $singleGame;
+      rouletteItemHeight = 235,
+      $gamesList,
+      $jsGames = $('.js-games'),
+      $rouletteContainer,
+      $roulette,
+      currentAppId;
 
   // Grab the list of games
   if( $jsGames.length ){
@@ -27,8 +30,10 @@
         $jsMeter.css({ 'width':'50%' });
         gamesList = data;
         $jsGames.after('<div class="js-games-list"></div>');
-        $jsGames.before('<div class="js-single-game single-game"></div>');
-        $singleGame = $('.js-single-game');
+        $jsGames.before('<div class="roulette js-roulette"><div class="roulette__items js-roulette-items"></div></div>');
+        $jsGames.before('<div class="js-random random-button button large">Pick one for me</div>');
+        $roulette = $('.js-roulette');
+        $rouletteContainer = $('.js-roulette-items');
         $gamesList = $('.js-games-list');
         renderGames();
         $jsGames.remove();
@@ -40,23 +45,53 @@
     $container.append('<h1>' + title + '</h1>');
   }
 
-  function renderSingleGame() {
-    var $el = $(this);
+  function renderRouletteGame(game) {
+    var $container = $('<div class="roulette__item" data-game-id="' + game.appId + '"></div>');
+    $container.append('<h4 class="roulette__name">' + game.name + '</h4>');
+    $container.append('<div class="roulette__image"><img src="' + game.header + '" alt="' + game.name + '"><div class="roulette__veil"></div></div>');
+    $container.append('<div class="roulette__total-played">' + game.playtimeForeverReadable + '</div>');
+    // $rouletteContainer.append('<fieldset class="switch" tabindex="0">' +
+    //                      '<input id="gamePlayed' + game.appId + '" type="checkbox">' +
+    //                      '<label for="gamePlayed' + game.appId + '"></label>' +
+    //                      '<span class="">Played</span>' +
+    //                    '</fieldset>');
+    $rouletteContainer.append($container);
+    // $rouletteContainer.addClass('is-visible');
+    // 
+  }
 
+  function showGame(gameId) {
+    var itemPosition = 0;
+    if(currentAppId === gameId) {
+        $roulette.toggleClass('is-visible');
+        return;
+    }
+
+    currentAppId = gameId;
+
+    itemPosition =  -1 * ($('[data-game-id="' + gameId + '"]:first').index() * rouletteItemHeight);
+    $rouletteContainer.animate({
+      top: itemPosition + 'px'
+    }, 300);
+
+    $('html,body').animate({
+       scrollTop: 0
+    }, 300);
+    
+    $roulette.addClass('is-visible');
   }
 
   function renderGame($container, game){
+    var $html;
     if(! game.logo) { return; }
-    var $html = $('<div class="steam-game js-game"></div>');
-    $html.data('header', game.header);
+    renderRouletteGame(game);
+
+    $html = $('<div class="steam-game js-game"></div>');
+    $html.data('appId', game.appId);
+    $html.data('playtimeForeverReadable', game.playtimeForeverReadable);
     $html.append('<img class="steam-game__image" src="' + game.logo + '" alt="' + game.name + '">');
     $html.append('<h5 class="steam-game__name">' + game.name + '</h5>');
     $html.append('<div class="steam-game__total-played">' + game.playtimeForeverReadable + '</div>');
-    // $html.append('<fieldset class="switch" tabindex="0">' +
-    //                 '<input id="gamePlayed' + game.appId + '" type="checkbox">' +
-    //                 '<label for="gamePlayed' + game.appId + '"></label>' +
-    //                 '<span class="">Played</span>' +
-    //               '</fieldset>');
     $container.append($html);
   }
   
@@ -67,10 +102,10 @@
     for(i = 0; i < gamesList.length; i++) {
       renderGame($gamesList, gamesList[i]);
     }
-
-    $('body').on('click', '.js-game', function(){
-      renderSingleGame.call(this);
-    });
-
   }
+
+  $('body').on('click', '.js-game', function(){
+    showGame($(this).data('appId'));
+  });
+
 })();
