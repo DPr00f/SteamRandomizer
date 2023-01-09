@@ -15,7 +15,7 @@
     "express-partials": "^0.3.0",
     "express-session": "^1.10.2",
     "isnumeric": "^0.1.4",
-    "method-override": "^2.3.1",
+    "method-override": "^3.0.0",
     "mysql": "^2.5.4",
     "passport": "^0.2.1",
     "passport-steam": "^0.1.4",
